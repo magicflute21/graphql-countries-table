@@ -1,3 +1,5 @@
+const API_URL = 'https://countries.trevorblades.com/';
+
 const fetchData = async <T>(url: string, query: string): Promise<T> => {
   const response = await fetch(url, {
     method: 'POST',
@@ -20,4 +22,4 @@ const fetchData = async <T>(url: string, query: string): Promise<T> => {
   return result.data;
 };
 
-export { fetchData };
+export { fetchData, API_URL };

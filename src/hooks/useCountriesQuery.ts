@@ -1,11 +1,10 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { fetchData } from "../api/api";
+import { API_URL, fetchData } from "../api/api";
 import { QUERY } from "../util/constants";
 import { CountriesResponse } from "../types/countries";
 
 const useCountriesQuery = () => {
   const fetchCountries = async (): Promise<CountriesResponse> => {
-    const url = 'https://countries.trevorblades.com/';
     const query = `
       query {
         countries {
@@ -14,7 +13,7 @@ const useCountriesQuery = () => {
         }
       }
     `;
-    const data = await fetchData<CountriesResponse>(url, query);
+    const data = await fetchData<CountriesResponse>(API_URL, query);
     return data || { countries: [] };
   }
 

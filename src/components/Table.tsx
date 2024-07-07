@@ -45,9 +45,9 @@ const Table = ({ filterValue, countries }: Props) => {
   return(
     <div className="p-8 rounded-xl bg-container ">
       <table className='border w-full'>
-        <thead>
+        <thead role="rowgroup">
           {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
+            <tr key={headerGroup.id} role="row">
               {headerGroup.headers.map(header => (
                 <th key={header.id} className='border px-8 text-left w-1/2 py-1'>
                   {header.isPlaceholder
@@ -61,9 +61,9 @@ const Table = ({ filterValue, countries }: Props) => {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody role="rowgroup">
           {table.getRowModel().rows.map(row => (
-            <tr key={row.id}>
+            <tr key={row.id} role="row">
               {row.getVisibleCells().map(cell => (
                 <td key={cell.id} className='px-4 text-left py-0.5'>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
