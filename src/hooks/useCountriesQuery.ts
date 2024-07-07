@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { fetchData } from "../api/api";
 import { QUERY } from "../util/constants";
+import { CountriesResponse } from "../types/countries";
 
 const useCountriesQuery = () => {
-  const fetchCountries = async () => {
+  const fetchCountries = async (): Promise<CountriesResponse> => {
     const url = 'https://countries.trevorblades.com/';
     const query = `
       query {
@@ -14,11 +15,11 @@ const useCountriesQuery = () => {
         }
       }
     `;
-    const data = await fetchData(url, query);
-    return data || [];
+    const data = await fetchData<CountriesResponse>(url, query);
+    return data || { countries: [] };
   }
 
-  const countriesQuery = useQuery({
+  const countriesQuery: UseQueryResult<CountriesResponse, Error> = useQuery({
     queryKey: [QUERY.countries],
     queryFn: fetchCountries,
     staleTime: Infinity,
@@ -26,7 +27,8 @@ const useCountriesQuery = () => {
   });
 
   return { 
-    countries: countriesQuery.data,
+    countries: countriesQuery.data?.countries || [],
+    isLoading: countriesQuery.isLoading,
   }
 }
 

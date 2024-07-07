@@ -1,94 +1,78 @@
-import React from 'react';
-
+import { useMemo } from 'react';
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { Country } from '../types/countries';
+import useCountriesQuery from '../hooks/useCountriesQuery';
 
-type Person = {
-  firstName: string
-  lastName: string
-}
-const defaultData: Person[] = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-  },
-]
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<Country>()
 const columns = [
-  columnHelper.accessor('firstName', {
+  columnHelper.accessor('name', {
     cell: info => info.getValue(),
-    footer: info => info.column.id,
+    header: () => <span>Name</span>,
   }),
-  columnHelper.accessor(row => row.lastName, {
-    id: 'lastName',
+  columnHelper.accessor('code', {
+    id: 'code',
     cell: info => <i>{info.getValue()}</i>,
-    header: () => <span>Last Name</span>,
-    footer: info => info.column.id,
+    header: () => <span>Country code</span>,
+    filterFn: 'includesString'
   }),
 ]
 
-const Table = () => {
-  const [data] = React.useState(() => [...defaultData])
+interface Props {
+   filterValue: string
+}
+
+const Table = ({ filterValue }: Props) => {
+  const { countries } = useCountriesQuery();
+  const data = useMemo(() => [...countries], [countries]);
+  const filteredData = useMemo(() => {
+    return data.filter((country) =>
+      country.code.toLowerCase().includes(filterValue.toLowerCase())
+    );
+  }, [data, filterValue]);
+
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
   })
 
   return(
-    <div className="p-2">
-    <table>
-      <thead>
-        {table.getHeaderGroups().map(headerGroup => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map(header => (
-              <th key={header.id}>
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map(row => (
-          <tr key={row.id}>
-            {row.getVisibleCells().map(cell => (
-              <td key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-      {/* <tfoot>
-        {table.getFooterGroups().map(footerGroup => (
-          <tr key={footerGroup.id}>
-            {footerGroup.headers.map(header => (
-              <th key={header.id}>
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.footer,
-                      header.getContext()
-                    )}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </tfoot> */}
+    <div className="p-8 rounded-xl bg-container ">
+      <table className='border w-full'>
+        <thead>
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
+                <th key={header.id} className='border px-8 text-left w-1/2 py-1'>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map(row => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id} className='px-4 text-left py-0.5'>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
     </table>
   </div>
   )
