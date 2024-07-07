@@ -11,7 +11,6 @@ const useCountriesQuery = () => {
         countries {
           code
           name
-          capital
         }
       }
     `;
@@ -26,10 +25,7 @@ const useCountriesQuery = () => {
     retry: 1,
   });
 
-  return { 
-    countries: countriesQuery.data?.countries || [],
-    isLoading: countriesQuery.isLoading,
-  }
+  return countriesQuery;
 }
 
 export default useCountriesQuery;

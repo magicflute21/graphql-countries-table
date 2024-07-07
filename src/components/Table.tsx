@@ -7,7 +7,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { Country } from '../types/countries';
-import useCountriesQuery from '../hooks/useCountriesQuery';
 
 const columnHelper = createColumnHelper<Country>()
 const columns = [
@@ -25,10 +24,10 @@ const columns = [
 
 interface Props {
    filterValue: string
+   countries: Country[]
 }
 
-const Table = ({ filterValue }: Props) => {
-  const { countries } = useCountriesQuery();
+const Table = ({ filterValue, countries }: Props) => {
   const data = useMemo(() => [...countries], [countries]);
   const filteredData = useMemo(() => {
     return data.filter((country) =>
