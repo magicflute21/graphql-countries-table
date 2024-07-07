@@ -10,7 +10,7 @@ export default {
         container: '#2A323C',
       },
       backgroundImage: {
-        'custom-gradient': 'linear-gradient(to bottom, #1D232A, #122212)', // Custom gradient
+        'custom-gradient': 'linear-gradient(to bottom, #1D232A, #122212)',
       },
     },
   },

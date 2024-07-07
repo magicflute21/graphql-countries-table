@@ -1,4 +1,3 @@
-import './App.css'
 import CountriesTable from './components/CountriesTable'
 
 function App() {
